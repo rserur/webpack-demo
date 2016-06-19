@@ -6,15 +6,21 @@ const parts = require('./libs/parts');
 
 const PATHS = {
   app: path.join(__dirname, 'app'),
+  style: [
+    path.join(__dirname, 'node_modules', 'purecss'),
+    path.join(__dirname, 'app', 'main.css')
+  ],
   build: path.join(__dirname, 'build')
 };
 
 const common = {
   entry: {
+    style: PATHS.style,
     app: PATHS.app
   },
   output: {
     path: PATHS.build,
+    publicPath: '/webpack-demo/',
     filename: '[name].js'
   },
   plugins: [
@@ -33,9 +39,7 @@ switch(process.env.npm_lifecycle_event) {
       {
         devtool: 'source-map',
         output: {
-          path: PATHS.build,
-          filename: '[name].[chunkhash].js',
-          chunkFilename: '[chunkhash].js'
+          path: PATHS.build
         }
       },
       parts.clean(PATHS.build),
@@ -48,16 +52,19 @@ switch(process.env.npm_lifecycle_event) {
         entries: ['react']
       }),
       parts.minify(),
-      parts.setupCSS(PATHS.app)
+      parts.extractCSS(PATHS.style),
+      parts.purifyCSS([PATHS.app])
     );
     break;
+  case 'stats':
+    config = merge();
   default:
     config = merge(
       common,
       {
         devtool: 'eval-source-map'
       },
-      parts.setupCSS(PATHS.app),
+      parts.setupCSS(PATHS.style),
       parts.devServer({
         host: process.env.HOST,
         port: process.env.PORT
@@ -65,4 +72,7 @@ switch(process.env.npm_lifecycle_event) {
     );
 }
 
-module.exports = validate(config);
+module.exports = validate(config, {
+  quiet: true
+});
+
