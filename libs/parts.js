@@ -63,3 +63,17 @@ exports.setFreeVariable = function(key, value) {
     ]
   };
 }
+
+exports.extractBundle = function(options) {
+  const entry = {};
+  entry[options.name] = options.entries;
+
+  return {
+    entry: entry, // entry point needed for splitting
+    plugins: [
+      new webpack.optimize.CommonsChunkPlugin({
+        names: [options.name, 'manifest']
+      })
+    ]
+  };
+}
