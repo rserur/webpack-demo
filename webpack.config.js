@@ -3,6 +3,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const merge = require('webpack-merge');
 const validate = require('webpack-validator');
 const parts = require('./libs/parts');
+const configSuitcss = require('stylelint-config-suitcss');
 
 const PATHS = {
   app: path.join(__dirname, 'app'),
@@ -27,7 +28,21 @@ const common = {
     new HtmlWebpackPlugin({
       title: 'Webpack demo'
     })
-  ]
+  ],
+  module: {
+    preLoaders: [ 
+      {
+        test: /\.jsx?$/,
+        loaders: ['eslint', 'jshint'],
+        include: PATHS.app
+      }
+    ]
+  },
+  postcss: function () {
+    return [
+      stylelint(configSuitcss)
+    ];
+  }
 };
 
 var config;

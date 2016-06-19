@@ -5,4 +5,4 @@ module.exports = function () {
   element.innerHTML = 'Hello world';
 
   return element;
-}
+};
