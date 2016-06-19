@@ -1,5 +1,7 @@
 const webpack = require('webpack');
 
+const CleanWebpackPlugin = require('clean-webpack-plugin');
+
 exports.devServer = function(options) {
   return {
     devServer: {
@@ -16,7 +18,7 @@ exports.devServer = function(options) {
         multiStep: true
       })
     ]
-  }
+  };
 }
 
 exports.setupCSS = function(paths) {
@@ -30,7 +32,7 @@ exports.setupCSS = function(paths) {
         }
       ]
     }
-  }
+  };
 }
 
 exports.minify = function() {
@@ -50,7 +52,7 @@ exports.minify = function() {
         }
       })
     ]
-  }
+  };
 }
 
 exports.setFreeVariable = function(key, value) {
@@ -73,6 +75,16 @@ exports.extractBundle = function(options) {
     plugins: [
       new webpack.optimize.CommonsChunkPlugin({
         names: [options.name, 'manifest']
+      })
+    ]
+  };
+}
+
+exports.clean = function(path) {
+  return {
+    plugins: [
+      new CleanWebpackPlugin([path], {
+        root: process.cwd()
       })
     ]
   };
