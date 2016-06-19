@@ -5,6 +5,8 @@ const validate = require('webpack-validator');
 const parts = require('./libs/parts');
 const configSuitcss = require('stylelint-config-suitcss');
 
+process.env.BABEL_ENV = TARGET;
+
 const PATHS = {
   app: path.join(__dirname, 'app'),
   style: [
@@ -30,6 +32,11 @@ const common = {
     })
   ],
   module: {
+    loaders: [
+      test: /\.jsx?$/,
+      loaders: ['babel?cacheDirectory'],
+      include: PATHS.app
+    ],
     preLoaders: [ 
       {
         test: /\.jsx?$/,
@@ -42,6 +49,9 @@ const common = {
     return [
       stylelint(configSuitcss)
     ];
+  },
+  resolve: { 
+    extensions: ['', '.js', '.jsx']
   }
 };
 
